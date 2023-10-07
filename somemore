@@ -1,0 +1,33 @@
+#!/bin/sh -e
+
+PREREQ=""
+
+prereqs () {
+	echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+echo "Hello there, from the 'somemore' hook"
+echo "I'm in /etc/initramfs-tools/hooks/somemore"
+
+if [ -f "$PWD/somemore.sh" ]; then
+	echo "I will run your somemore script for you ('$PWD/somemore.sh')"
+	. /usr/share/initramfs-tools/hook-functions
+	. "$PWD/somemore.sh"
+	echo "Run successfully!"
+else
+	echo "If you want to run your own script, add a file named '$PWD/somemore.sh'"
+fi
+
+if [ -f "$PWD/runmore.sh" ]; then
+	cp "$PWD/runmore.sh" "$DESTDIR/etc"
+	echo "I copied the runmore.sh script for you"
+else
+	echo "You can also add a 'runmore.sh' file that will get run on boot"
+fi
